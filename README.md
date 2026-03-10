@@ -2,8 +2,23 @@
 
 Stream your desktop (or a window) into VRChat’s video player over the internet. OBS captures and sends video via RTMP to MediaMTX, which serves HLS locally; a Cloudflare quick tunnel exposes that stream over HTTPS so you can paste one URL into VRChat. An optional batch file starts MediaMTX and the tunnel for you.
 
-> [!NOTE]
-> Even with all these settings you will still have a 3-5 second delay between desktop and VRChat, this is more for streaming content to watch inton VRChat that isn't normnally possible. Rather than a realtime desktop feed.
+> **Note:** Even with these settings you’ll have about 3–5 seconds delay between desktop and VRChat. Best for streaming content to watch in VRChat rather than a real-time desktop feed.
+
+---
+
+## Table of contents
+
+| Section | Description |
+|--------|-------------|
+| [Dependencies](#dependencies) | What you need (OBS, MediaMTX, VB-Cable, Cloudflared) |
+| [Pipeline](#pipeline-full-flow) | How video flows: Desktop → OBS → RTMP → MediaMTX → HTTPS → VRChat |
+| [Folder setup](#folder-setup) | Where to put files for the batch launcher |
+| [Batch File Launcher](#batch-file-launcher-optional) | One-click start for MediaMTX + tunnel |
+| [MediaMTX](#mediamtx-converts-obs-output-into-a-vrchat-stream) | Download, configure, run (RTMP → HLS) |
+| [OBS](#obs-capturing-the-stream) | Capture, stream settings, output settings |
+| [Virtual Cable](#virtual-cable-audio-routing) | Route app audio into OBS |
+| [Cloudflared](#cloudflared-expose-hls-over-https) | Temporary tunnel, batch usage, optional persistent tunnel |
+| [Notes / Tips](#notes--tips) | Performance and reminders |
 
 ---
 
@@ -36,6 +51,7 @@ VRChat Video Player (HLS URL: https://….trycloudflare.com/live/vrchat/index.m3
 ---
 
 # Folder setup
+
 To use the batch file launcher, create a folder (for example on your C: drive):
 
 ```
@@ -268,3 +284,7 @@ Configure the service to run your tunnel (see Cloudflare’s docs). Your stream 
 * For best performance, close unnecessary apps while streaming.
 * Test your local stream at `http://127.0.0.1:8888/live/vrchat/index.m3u8` before using the tunnel.
 * The temporary tunnel URL changes every time you run the batch file; update VRChat with the new full URL each session.
+
+---
+
+↑ [Back to top](#desktop-to-vrchat-stream)
