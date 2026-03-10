@@ -14,6 +14,7 @@ Make a folder on your C: drive at root if you wnat to use the batch file launche
 # Batch File Launcher (Optional)
 
 You can down the `.bat` file to launch both MediaMTX and Cloudflared automatically. This is useful if you want to avoid opening multiple consoles manually.
+This still requires you to manually det up everything below this is just a quick launcher for the full set up.
 
 [Download the launch batch file](https://github.com/LastationVRChat/Desktop-to-VRChat/raw/main/launch_vrc_stream.bat)
 
