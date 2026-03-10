@@ -61,7 +61,7 @@ C:\vrcstreamserver\
 Place the batch file, MediaMTX, and Cloudflared there as described below. The batch file also works if you put it elsewhere—it uses its own folder as the base path.
 
 > [!IMPORTANT]
-> If you want to skip the **MediaMTX** and **Cloudflared** set up I have a preset up folder with everything ready except for **OBS** and **Virtual-Cable** at 
+> If you want to skip the **MediaMTX** and **Cloudflared** set up I have a preset up folder with everything ready except for **OBS** and **Virtual-Cable** at [Releases](https://github.com/LastationVRChat/Desktop-to-VRChat/releases)
 
 ---
 
