@@ -1,3 +1,12 @@
+# Desktop to VRChat stream
+
+Stream your desktop (or a window) into VRChat’s video player over the internet. OBS captures and sends video via RTMP to MediaMTX, which serves HLS locally; a Cloudflare quick tunnel exposes that stream over HTTPS so you can paste one URL into VRChat. An optional batch file starts MediaMTX and the tunnel for you.
+
+> [!NOTE]
+> Even with all these settings you will still have a 3-5 second delay between desktop and VRChat, this is more for streaming content to watch inton VRChat that isn't normnally possible. Rather than a realtime desktop feed.
+
+---
+
 # Dependencies
 
 * [OBS Studio](https://obsproject.com/) – captures your desktop or specific windows.
