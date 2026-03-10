@@ -88,12 +88,9 @@ C:\vrcstreamserver\mediamtx\
 
 ## Step 2 — Configure `mediamtx.yml`
 
-A preconfigured `mediamtx.yml` can be found at [⬇ Download mediamtx.yml](https://github.com/LastationVRChat/Desktop-to-VRChat/blob/main/mediamtx.yml?raw=1)
+A preconfigured `mediamtx.yml` can be found at [Download mediamtx.yml](https://raw.githubusercontent.com/LastationVRChat/Desktop-to-VRChat/main/mediamtx.yml)
 
 Open `mediamtx.yml` in a text editor and replace or add the following:
-
-> [!NOTE]
-> You can just overwrite the whole file with just this if you don't want to ediit other settings or you can download the premade .yml above.
 
 ```yaml
 rtmp: yes
@@ -103,16 +100,25 @@ hls: yes
 hlsAddress: :8888
 hlsAlwaysRemux: yes
 hlsVariant: mpegts            # VRChat works best with MPEG-TS segments
-hlsSegmentDuration: 1s        # 1-second segments
+hlsSegmentDuration: 500ms        # half-second segments
 hlsSegmentCount: 3            # keep only 3 segments
-hlsPartDuration: 200ms        # fine-grained parts
+hlsPartDuration: 100ms        # fine-grained parts
 hlsAllowOrigins: ['*']        # allow VRChat to access
 
 paths:
   vrchat:
 ```
 
-> **Tip:** Keep `hlsEncryption: false` if you use Cloudflare Tunnel; it provides HTTPS.
+> **Tip:** You can try `hlsSegmentDuration: 250ms` for even lower latency; if playback stutters, use 500ms or 1s.
+
+> **Warning:** Do not change MediaMTX to `fmp4` or `lowLatency` variant unless you’ve confirmed VRChat supports it.
+
+optionally: you can disable unused protocols
+```
+rtsp: false
+webrtc: false
+srt: false
+```
 
 ## Step 3 — Run MediaMTX
 
@@ -152,11 +158,11 @@ http://127.0.0.1:8888/live/vrchat/index.m3u8
 **Settings → Output → Streaming**:
 
 ```
-Encoder: x264
+Encoder: x264                   # (Advanced → Custom x264 Options) — add `tune=zerolatency` to reduce encoder buffering (may slightly reduce quality).
 Rate Control: CBR
 Bitrate: 3000
-Keyframe Interval: 1
-CPU Preset: veryfast
+Keyframe Interval: 1            # keep at 1 second (required for HLS; shorter = lower latency).
+CPU Preset: veryfast            # `veryfast` is a good balance; `superfast` or `ultrafast` reduces encoding delay at the cost of quality or CPU.
 ```
 
 **Settings → Video**:
@@ -259,7 +265,6 @@ Configure the service to run your tunnel (see Cloudflare’s docs). Your stream 
 
 # Notes / Tips
 
-* Keep `hlsSegmentDuration` and `hlsPartDuration` low in `mediamtx.yml` for minimal VRChat latency.
 * For best performance, close unnecessary apps while streaming.
 * Test your local stream at `http://127.0.0.1:8888/live/vrchat/index.m3u8` before using the tunnel.
 * The temporary tunnel URL changes every time you run the batch file; update VRChat with the new full URL each session.
