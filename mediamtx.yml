@@ -1,4 +1,6 @@
 ###############################################
+# Tuned for VRChat: OBS → RTMP → MediaMTX → HLS (MPEG-TS). Only RTMP + HLS enabled; other protocols disabled.
+###############################################
 # Global settings
 
 # Settings in this section are applied anywhere.
@@ -253,7 +255,7 @@ playbackTrustedProxies: []
 # Global settings -> RTSP server
 
 # Enable publishing and reading streams with the RTSP protocol.
-rtsp: true
+rtsp: false
 # Enabled RTSP transport protocols. The handshake is always performed with TCP.
 rtspTransports: [udp, multicast, tcp]
 # Use secure protocol variants (RTSPS, SRTP, SRTCP).
@@ -343,7 +345,7 @@ hlsAlwaysRemux: yes
 # * mpegts - uses MPEG-TS segments, for maximum compatibility.
 # * fmp4 - uses fragmented MP4 segments, more efficient.
 # * lowLatency - uses Low-Latency HLS.
-hlsVariant: mpegts
+hlsVariant: mpegts   # VRChat in-world player: keep mpegts; do not use fmp4/lowLatency
 # Number of HLS segments to keep on the server.
 # Segments allow to seek through the stream.
 # Their number doesn't influence latency.
@@ -353,13 +355,13 @@ hlsSegmentCount: 3
 # The final segment duration is also influenced by the interval between IDR frames,
 # since the server changes the duration in order to include at least one IDR frame
 # in each segment.
-hlsSegmentDuration: 1s
+hlsSegmentDuration: 500ms
 # Minimum duration of each part.
 # A player usually puts 3 parts in a buffer before reproducing the stream.
 # Parts are used in Low-Latency HLS in place of segments.
 # Part duration is influenced by the distance between video/audio samples
 # and is adjusted in order to produce segments with a similar duration.
-hlsPartDuration: 200ms
+hlsPartDuration: 100ms
 # Maximum size of each segment.
 # This prevents RAM exhaustion.
 hlsSegmentMaxSize: 50M
@@ -375,7 +377,7 @@ hlsMuxerCloseAfter: 60s
 # Global settings -> WebRTC server
 
 # Enable publishing and reading streams with the WebRTC protocol.
-webrtc: true
+webrtc: false
 # Address of the WebRTC HTTP listener.
 webrtcAddress: :8889
 # Enable HTTPS on the WebRTC server.
@@ -432,7 +434,7 @@ webrtcTrackGatherTimeout: 2s
 # Global settings -> SRT server
 
 # Enable publishing and reading streams with the SRT protocol.
-srt: true
+srt: false
 # Address of the SRT listener.
 srtAddress: :8890
 
