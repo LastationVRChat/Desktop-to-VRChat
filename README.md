@@ -88,9 +88,12 @@ C:\vrcstreamserver\mediamtx\
 
 ## Step 2 — Configure `mediamtx.yml`
 
-A preconfigured `mediamtx.yml` can be found at [Download mediamtx.yml](https://raw.githubusercontent.com/LastationVRChat/Desktop-to-VRChat/main/mediamtx.yml)
+A preconfigured `mediamtx.yml` can be found at [⬇ Download mediamtx.yml](https://github.com/LastationVRChat/Desktop-to-VRChat/blob/main/mediamtx.yml?raw=1)
 
 Open `mediamtx.yml` in a text editor and replace or add the following:
+
+> [!NOTE]
+> You can just overwrite the whole file with just this if you don't want to ediit other settings or you can download the premade .yml above.
 
 ```yaml
 rtmp: yes
