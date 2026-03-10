@@ -4,7 +4,29 @@
 * [MediaMTX](https://github.com/bluenviron/mediamtx/releases) – converts your OBS stream to a VRChat-compatible format.
 * [VB-Audio Virtual Cable](https://vb-audio.com/Cable/) – routes audio from applications into your stream.
 * [Cloudflare Tunnel](https://github.com/cloudflare/cloudflared/releases/latest) – exposes your stream over HTTPS for remote access.
+---
 
+# Pipeline (full flow)
+
+Video and audio move through the stack like this:
+
+```
+Desktop
+   ↓
+OBS (capture + encode, streams via RTMP)
+   ↓
+RTMP (rtmp://127.0.0.1/live, key: vrchat)
+   ↓
+MediaMTX (RTMP → HLS at http://localhost:8888/live/vrchat/)
+   ↓
+HTTPS (Cloudflare Tunnel → public https://….trycloudflare.com)
+   ↓
+VRChat Video Player (HLS URL: https://….trycloudflare.com/live/vrchat/index.m3u8)
+```
+
+---
+
+# Folder setup
 To use the batch file launcher, create a folder (for example on your C: drive):
 
 ```
