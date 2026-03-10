@@ -174,6 +174,9 @@ FPS: 30
 
 Temporary tunnels give you a public HTTPS URL so VRChat (or others) can reach your stream. **You don’t need a Cloudflare account or your own domain** for the temporary tunnel used by the batch file.
 
+> **Usage and terms (quick tunnels)**  
+> Cloudflare documents TryCloudflare / quick tunnels as a free feature intended for **testing and development**, with no uptime guarantees and some limits. For personal or occasional VRChat streams this is usually fine, but for any regular, production, or commercial use you should set up a named Cloudflare Tunnel under a Cloudflare account instead and follow their terms.
+
 ## Step 1 — Download Cloudflared
 
 1. Go to [Cloudflared Releases](https://github.com/cloudflare/cloudflared/releases/latest).
