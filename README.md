@@ -11,6 +11,22 @@ Make a folder on your C: drive at root if you wnat to use the batch file launche
 
 ---
 
+# Batch File Launcher (Optional)
+
+You can down the `.bat` file to launch both MediaMTX and Cloudflared automatically. This is useful if you want to avoid opening multiple consoles manually.
+
+Download:
+
+**Features:**
+
+- Checks if MediaMTX and Cloudflared exist, otherwise asks for the path.
+- Starts MediaMTX for local RTMP/HLS streaming.
+- Starts a temporary Cloudflare Tunnel and copies the HTTPS URL to your clipboard.
+- Optionally prompts to create a persistent tunnel for always-on streaming.
+- Place this `.bat` file inside `C:\vrcstreamserver\` or any folder you prefer.
+
+---
+
 # MediaMTX (Converts OBS output into a VRChat stream)
 
 ## Step 1 — Download & Extract
