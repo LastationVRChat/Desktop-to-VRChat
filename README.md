@@ -1,4 +1,3 @@
-
 # Dependencies
 
 * [OBS Studio](https://obsproject.com/) – captures your desktop or specific windows.
@@ -6,25 +5,41 @@
 * [VB-Audio Virtual Cable](https://vb-audio.com/Cable/) – routes audio from applications into your stream.
 * [Cloudflare Tunnel](https://github.com/cloudflare/cloudflared/releases/latest) – exposes your stream over HTTPS for remote access.
 
-Make a folder on your C: drive at root if you wnat to use the batch file launcher.
-`C:\vrcstreamserver\`
+To use the batch file launcher, create a folder (for example on your C: drive):
+
+```
+C:\vrcstreamserver\
+```
+
+Place the batch file, MediaMTX, and Cloudflared there as described below. The batch file also works if you put it elsewhere—it uses its own folder as the base path.
 
 ---
 
 # Batch File Launcher (Optional)
 
-You can down the `.bat` file to launch both MediaMTX and Cloudflared automatically. This is useful if you want to avoid opening multiple consoles manually.
-This still requires you to manually det up everything below this is just a quick launcher for the full set up.
+The `launch_vrc_stream.bat` file starts MediaMTX and a temporary Cloudflare tunnel so you don’t have to open multiple consoles by hand. You still need to set up OBS, MediaMTX, and Cloudflared once (see sections below); the batch is only a quick launcher.
 
-[Download the launch batch file](https://github.com/LastationVRChat/Desktop-to-VRChat/raw/main/launch_vrc_stream.bat)
+**What it does:**
 
-**Features:**
+- Checks that MediaMTX and Cloudflared exist at the expected paths; if not, asks you to enter the full path to each.
+- Starts **MediaMTX** in a separate window (local RTMP/HLS server).
+- Starts a **temporary Cloudflare tunnel** in the same window. After a few seconds you’ll see a URL in a box (e.g. `https://something.trycloudflare.com`).
+- Shows clear instructions: **your full stream URL for VRChat or OBS** is that URL plus `/live/vrchat/index.m3u8` (e.g. `https://something.trycloudflare.com/live/vrchat/index.m3u8`). Copy the URL from the box, add `/live/vrchat/index.m3u8`, and paste that full URL into VRChat or OBS.
+- When you’re done streaming, close the tunnel window to stop the tunnel. You can leave MediaMTX running or close that window too.
 
-- Checks if MediaMTX and Cloudflared exist, otherwise asks for the path.
-- Starts MediaMTX for local RTMP/HLS streaming.
-- Starts a temporary Cloudflare Tunnel and copies the HTTPS URL to your clipboard.
-- Optionally prompts to create a persistent tunnel for always-on streaming.
-- Place this `.bat` file inside `C:\vrcstreamserver\` or any folder you prefer.
+**Expected folder layout (if you use the default paths):**
+
+```
+C:\vrcstreamserver\
+  launch_vrc_stream.bat
+  mediamtx\
+    mediamtx.exe
+    mediamtx.yml
+  Cloudflared\
+    cloudflared.exe
+```
+
+You can place the batch file in another folder; it will look for `mediamtx\mediamtx.exe` and `Cloudflared\cloudflared.exe` relative to its own location, or prompt you for paths if they’re missing.
 
 ---
 
@@ -32,13 +47,17 @@ This still requires you to manually det up everything below this is just a quick
 
 ## Step 1 — Download & Extract
 
-Download the Windows zip for MediaMTX and extract it somewhere like:
+Download the Windows zip for MediaMTX and extract it so you have a folder like:
 
 ```
 C:\vrcstreamserver\mediamtx\
 ```
 
+(with `mediamtx.exe` and `mediamtx.yml` inside).
+
 ## Step 2 — Configure `mediamtx.yml`
+
+A preconfigured `mediamtx.yml` can be found at 
 
 Open `mediamtx.yml` in a text editor and replace or add the following:
 
@@ -59,18 +78,11 @@ paths:
   vrchat:
 ```
 
-> **Tip:** Keep `hlsEncryption: false` if you plan to use Cloudflare Tunnel; it handles HTTPS.
+> **Tip:** Keep `hlsEncryption: false` if you use Cloudflare Tunnel; it provides HTTPS.
 
 ## Step 3 — Run MediaMTX
 
-Inside the MediaMTX folder, run:
-
-```
-mediamtx.exe
-```
-
-A console window will appear — leave it running.
-Your PC is now acting as a local stream server.
+If you use the batch launcher, it starts MediaMTX for you. Otherwise, run `mediamtx.exe` from the MediaMTX folder. Leave the window open; your PC is then acting as a local stream server.
 
 ---
 
@@ -95,7 +107,7 @@ Click **Apply**.
 ## Step 3 — Start Streaming
 
 * Click **Start Streaming** in OBS.
-* Check your local HLS stream at:
+* You can test the local HLS stream at:
 
 ```
 http://127.0.0.1:8888/live/vrchat/index.m3u8
@@ -138,79 +150,79 @@ FPS: 30
 
 # Cloudflared (Expose HLS over HTTPS)
 
-## Step 1 — Create Cloudflare Account
+Temporary tunnels give you a public HTTPS URL so VRChat (or others) can reach your stream. **You don’t need a Cloudflare account or your own domain** for the temporary tunnel used by the batch file.
 
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/)
-2. Create an account or log in.
-3. You **don’t need a domain**; temporary tunnels get a `.trycloudflare.com` URL.
+## Step 1 — Download Cloudflared
 
-## Step 2 — Download Cloudflared
-
-1. Go to: [Cloudflared Releases](https://github.com/cloudflare/cloudflared/releases/latest)
-2. Download `cloudflared-windows-amd64.exe`
-3. Place it somewhere like:
+1. Go to [Cloudflared Releases](https://github.com/cloudflare/cloudflared/releases/latest).
+2. Download `cloudflared-windows-amd64.exe`.
+3. Put it in a folder, for example:
 
 ```
 C:\vrcstreamserver\Cloudflared\cloudflared.exe
 ```
 
-4. Optional: add the folder to **Windows PATH** for easier access.
+4. Optional: add that folder to your **Windows PATH**.
 
-## Step 3 — Start a Tunnel
+## Step 2 — Using the Batch Launcher
 
-Run in **Command Prompt**:
+When you run `launch_vrc_stream.bat`, it starts a temporary tunnel in the same window. After a few seconds you’ll see output like:
+
+```
+|  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+|  https://something-random.trycloudflare.com                                                |
+```
+
+**Your full stream URL for VRChat or OBS is:**
+
+```
+https://something-random.trycloudflare.com/live/vrchat/index.m3u8
+```
+
+Copy the `https://...trycloudflare.com` URL from the box, add `/live/vrchat/index.m3u8` to the end, and paste that into VRChat or OBS. No login or certificates are required. Close the batch window when you’re done to stop the tunnel. The URL changes each time you start a new tunnel.
+
+## Step 3 — Manual Tunnel (without the batch file)
+
+To run the tunnel yourself in a command prompt:
 
 ```
 cloudflared tunnel --url http://localhost:8888
 ```
 
-* The first time, it will prompt a login via browser.
-* After login, you’ll see:
+You’ll see a box with the `https://...trycloudflare.com` URL. Use that URL + `/live/vrchat/index.m3u8` as your stream URL in VRChat or OBS.
 
-```
-INFO: URL (https) tunnel ready: https://random-name.trycloudflare.com
-```
+## Step 4 — Optional: Persistent Tunnel (same URL every time)
 
-* Copy this HTTPS URL. This is your **public VRChat stream URL**.
+For a fixed URL and to run the tunnel as a Windows service (e.g. always on):
 
-## Step 4 — Update VRChat / OBS
+1. Create a Cloudflare account and run:
 
-Change your HLS stream URL to the Cloudflare Tunnel URL:
+   ```
+   cloudflared tunnel login
+   ```
 
-```
-https://random-name.trycloudflare.com/live/vrchat/index.m3u8
-```
+   When the browser opens, log in and select a zone (you need at least one site/domain in Cloudflare for this).
 
-> No certificates are needed; Cloudflare handles HTTPS.
+2. Create a named tunnel and route DNS:
 
-## Step 5 — Optional: Persistent Tunnel
+   ```
+   cloudflared tunnel create myvrchat
+   cloudflared tunnel route dns myvrchat myvrchat.trycloudflare.com
+   ```
 
-To make it always run:
+3. Install and run as a Windows service (run Command Prompt as Administrator):
 
-1. Create a named tunnel:
+   ```
+   cloudflared service install
+   ```
 
-```
-cloudflared tunnel create myvrchat
-```
-
-2. Map it to your local HLS server:
-
-```
-cloudflared tunnel route dns myvrchat randomname.trycloudflare.com
-```
-
-3. Install it as a Windows service:
-
-```
-cloudflared service install
-```
-
-Now it starts automatically with Windows.
+Configure the service to run your tunnel (see Cloudflare’s docs). Your stream URL would then be something like `https://myvrchat.trycloudflare.com/live/vrchat/index.m3u8`. This setup is separate from the batch launcher, which only uses temporary tunnels.
 
 ---
 
 # Notes / Tips
 
-* Keep `hlsSegmentDuration` and `hlsPartDuration` low for minimal VRChat latency.
-* For best performance, **close unnecessary apps** while streaming.
-* Always test your local stream before exposing it online.
+* Keep `hlsSegmentDuration` and `hlsPartDuration` low in `mediamtx.yml` for minimal VRChat latency.
+* For best performance, close unnecessary apps while streaming.
+* Test your local stream at `http://127.0.0.1:8888/live/vrchat/index.m3u8` before using the tunnel.
+* The temporary tunnel URL changes every time you run the batch file; update VRChat with the new full URL each session.
