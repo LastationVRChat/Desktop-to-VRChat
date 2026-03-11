@@ -60,9 +60,6 @@ C:\vrcstreamserver\
 
 Place the batch file, MediaMTX, and Cloudflared there as described below. The batch file also works if you put it elsewhere—it uses its own folder as the base path.
 
-> [!IMPORTANT]
-> If you want to skip the **MediaMTX** and **Cloudflared** set up I have a preset up folder with everything ready except for **OBS** and **Virtual-Cable** at [Releases](https://github.com/LastationVRChat/Desktop-to-VRChat/releases)
-
 ---
 
 # Batch File Launcher (Optional)
@@ -174,22 +171,46 @@ http://127.0.0.1:8888/live/vrchat/index.m3u8
 
 ## Step 4 — Output Settings
 
-**Settings → Output → Streaming**:
+**Settings → Output → Streaming** — pick the profile you want (lowest latency, balanced ~5 s, or highest quality), then use the table that matches your **Video Encoder**.
 
-```
-Encoder: x264                   # (Advanced → Custom x264 Options) — add `tune=zerolatency` to reduce encoder buffering (may slightly reduce quality).
-Rate Control: CBR
-Bitrate: 3000
-Keyframe Interval: 1            # keep at 1 second (required for HLS; shorter = lower latency).
-CPU Preset: veryfast            # `veryfast` is a good balance; `superfast` or `ultrafast` reduces encoding delay at the cost of quality or CPU.
-```
+**If your Video Encoder is "NVIDIA NVENC H.264"** — use this table (every row is a setting you see in OBS):
 
-**Settings → Video**:
+| Setting | Lowest latency | Balanced (~5 s, 1080p) | Highest quality |
+|--------|-----------------|------------------------|-----------------|
+| Rate Control | CBR | CBR | CBR |
+| Bitrate | 4500–6000 Kbps | 6000–8000 Kbps | 8000–12000 Kbps |
+| Keyframe Interval (0=auto) | 1 s | 1 s | 2 s |
+| Preset | P3: Fast (Low Quality) | P4: Medium or P5: Slow | P5–P6: Slow (High Quality) |
+| Tuning | Ultra Low Latency | High Quality | High Quality |
+| Multipass Mode | Two Passes (Quarter Resolution) | Two Passes (Full Resolution) | Two Passes (Full Resolution) |
+| Profile | high | high | high |
+| Look-ahead | Off | Off | On |
+| Psycho Visual Tuning | On (optional) | On | On |
 
-```
-Resolution: 1280x720 or 1920x1080
-FPS: 30
-```
+**If your Video Encoder is "x264"** — use this table instead:
+
+| Setting | Lowest latency | Balanced (~5 s, 1080p) | Highest quality |
+|--------|-----------------|------------------------|-----------------|
+| Rate Control | CBR | CBR | CBR |
+| Bitrate | 4500–6000 Kbps | 6000–8000 Kbps | 8000–12000 Kbps |
+| Keyframe Interval | 1 s | 1 s | 2 s |
+| CPU Preset | veryfast, superfast | veryfast, fast | fast, medium |
+| Custom x264 Options (Advanced) | `tune=zerolatency` | — | — |
+
+Use **Keyframe Interval 1** for HLS compatibility; 2 s is only for the highest-quality profile. For 1080p, set **Settings → Video** (or Rescale Output in Streaming) to **1920×1080** so the stream is not 4K. FPS: 30.
+
+**Settings → Video** (FPS and resolution for the stream):
+
+1. Open **Settings → Video** (left sidebar).
+2. **Base (Canvas) Resolution** — set to your display or capture size (e.g. 1920×1080 or 3840×2160). This is what OBS captures.
+3. **Output (Scaled) Resolution** — set to the resolution you want the **stream** to be:
+   - **1920×1080** for 1080p
+   - **1280×720** for 720p  
+   OBS will scale the canvas down to this before encoding. If you want to stream 1080p, choose **1920×1080** here.
+4. **FPS** — set to **30** (or 60 if you prefer). This is the frame rate of the stream.
+5. Click **Apply** / **OK**.
+
+**If you use Output → Streaming (Advanced)** and see **Rescale Output**: you can leave **Output (Scaled) Resolution** as-is in Video and instead enable **Rescale Output** in the Streaming tab and set it to **1920×1080** (and ensure your encoder is using that). Either method works; the stream resolution is whatever you set in Video’s “Output (Scaled) Resolution” or in Rescale Output.
 
 ---
 
